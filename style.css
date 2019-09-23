@@ -1,0 +1,46 @@
+.container {
+	width: 734px; /*note the borders of each square adds to this width!!!! so right now have 7 borders in each row each 2px thick, with 120px by 120px box this is (6 * 120 + 7 * 2)   */
+	height: 900px;
+	margin: auto;
+	margin-top: 100px;
+}
+
+h1 {
+	text-align: center;
+	font-size: 50px;
+	font-family: Candara;
+}
+
+.row {
+	height: 120px;
+}
+
+.col {
+	height: 120px;
+	width: 120px;
+	float: left;
+	font-size: 60px;
+	text-align: center;
+	line-height: 120px;
+}
+
+/*highlight the square in which the mouse is hovering over*/
+.col:hover {
+        background-color: coral !important;
+}
+
+.border-r {
+	border-right: 2px solid black;
+}
+
+.border-b {
+	border-bottom: 2px solid black;
+}
+
+.border-t {
+	border-top: 2px solid black;
+}
+
+.border-l {
+	border-left: 2px solid black;
+}
