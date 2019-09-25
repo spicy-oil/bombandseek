@@ -133,6 +133,7 @@ function BombAndSeekGame() {
 
 
 function Board() {
+    // Get HTML elements
     this.positions = Array.from(document.querySelectorAll('.col'));
     this.turnCounter = document.querySelectorAll('.turn_counter')[0];
     this.playerTurn = document.querySelectorAll('.player_turn')[0];
@@ -155,7 +156,6 @@ function Player(board) {
 
     this.setTeam = function (t) {
         this.team = t
-
     }
 
     this.takeTurn = function () {
@@ -169,7 +169,7 @@ function Player(board) {
         //event.currentTarget.dataset.selected = zero.toString();
 
         board.positions.forEach(el => el.removeEventListener('click', selectPiece));
-        if (checkValidSelection() == 1) {
+        if (isValidSelection()) {
             //Once piece is selected, wait for another click to determine the action/result.
             console.log('Valid piece selected!')
             board.positions.forEach(el => el.addEventListener('click', handleTarget));
@@ -181,21 +181,21 @@ function Player(board) {
 
     }
 
-    function checkValidSelection() { //Can't select opponent's pieces or empty squares.
+    function isValidSelection() { //Can't select opponent's pieces or empty squares.
         if (bombAndSeekGame.getTurn() == 0) { //if first turn
-            return 1;
+            return true;
         } else {
             if (parseInt(selectedPiece.dataset.empty) == 1) { //if empty
-                return 0;
+                return false;
             } else {
                 if (parseInt(selectedPiece.dataset.hidden) == 1) { //if hidden
-                    return 1;
+                    return true;
                 } else {
                     temp = [-1, bombAndSeekGame.player1Team, bombAndSeekGame.player2Team]
                     if (parseInt(selectedPiece.dataset.team) == temp[bombAndSeekGame.whoseTurn()]) { //if own piece
-                        return 1;
+                        return true;
                     } else {
-                        return 0;
+                        return false;
                     }
                 }
             }
