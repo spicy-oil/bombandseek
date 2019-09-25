@@ -34,6 +34,9 @@ function CheckTeam(pieceID) {
 
 function BombAndSeekGame() {
     this.board = new Board();
+    const dragonHP = 2;
+    this.dragon1HP = dragonHP;
+    this.dragon2HP = dragonHP;
     const player1 = new Player(this.board);
     const player2 = new Player(this.board);
     let turn = 0;
@@ -230,12 +233,21 @@ function Player(board) {
     function movePieces(s, t, scenario) { //scenario = 1 is when bomb moves to drag
 
         if (scenario == 1) {
-            if (bombAndSeekGame.getTurn() % 2 == 0) {
-                console.log('Player 1 WINS!!!')
-            } else {
-                console.log('Player 2 WINS!!!')
-            }
+            if (bombAndSeekGame.getTurn() % 2 == 0) { //Player 1's turn
+                console.log('Player 1 damages Player 2');
+                bombAndSeekGame.dragon2HP -= 1;
+                if (bombAndSeekGame.dragon2HP == 0) {
+                    console.log('Player 1 WINS!!!')
+                }
 
+            } else { // Player 2's turn
+            console.log('Player 2 damages Player 1');
+                bombAndSeekGame.dragon1HP -= 1;
+                if (bombAndSeekGame.dragon1HP == 0) {
+                    console.log('Player 2 WINS!!!')
+                }
+                
+            }
         } else {
             t.dataset.empty = zero.toString();
             t.dataset.pieceid = s.dataset.pieceid;
