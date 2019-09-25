@@ -251,22 +251,19 @@ function Player(board) {
                             let selectedPieceStrength = pieceStrength[parseInt(selectedPiece.dataset.pieceid)];
                             let targetPieceStrength = pieceStrength[parseInt(targetPiece.dataset.pieceid)];
 
-                            //Compare strength
-                            if (selectedPieceStrength == 0) { //If selected Bomb
-                                if (targetPieceStrength == 5) {
-                                    movePieces(selectedPiece, targetPiece, 1);
-                                } else { console.log('Selected piece too weak! Please reselect.'); reselectPiece(); }
-                            } else if (selectedPieceStrength == 5) {
-                                if (targetPieceStrength == 0) {
-                                    console.log('Dragon targeting bomb is invalid');
-                                    reselectPiece();
-                                }
-                            } else { //If bomb not selected
-                                if (selectedPieceStrength > targetPieceStrength) {
-                                    movePieces(selectedPiece, targetPiece, 0);
-                                } else { console.log('Selected piece too weak! Please reselect.'); reselectPiece(); }
+                            // Compare strength
+                            if (selectedPieceStrength == 0 && targetPieceStrength == 5) { //If selected Bomb
+                                movePieces(selectedPiece, targetPiece, 1);
+                            } else if (selectedPieceStrength == 5 && targetPieceStrength == 0) {
+                                console.log('Dragon targeting bomb is invalid');
+                                reselectPiece();
+                            } else if (selectedPieceStrength > targetPieceStrength) {
+                                console.log('Piece successfully captured.');
+                                movePieces(selectedPiece, targetPiece, 0);
+                            } else { 
+                                console.log('Selected piece too weak! Please reselect.');
+                                reselectPiece();
                             }
-
 
                         } else { console.log('Targeted piece is your own! Please reselect.'); reselectPiece(); } //If target is team, re-select.
 
