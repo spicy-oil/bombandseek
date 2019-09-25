@@ -119,6 +119,11 @@ function BombAndSeekGame() {
         } //[-1, player1's team, player2's team]
         
     }
+
+    this.debug = function () { // Double click on each square for debugging
+        this.board.positions.forEach(el => doubleClick(el));
+        console.log('Debug mode')
+    }
 }
 
 
@@ -303,9 +308,14 @@ function Player(board) {
         bombAndSeekGame.finishTurn(); //remember u need this to finish turn!!!
     }
 
+
 }
 
-
+// Utility function
+function doubleClick(element) {
+    element.click();
+    element.click()
+}
 
 
 //Stuff I copied from ppl
