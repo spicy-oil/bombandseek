@@ -16,18 +16,52 @@ h1 {
 }
 
 .col {
-	height: 120px;
-	width: 120px;
-	float: left;
-	font-size: 60px;
-	text-align: center;
-	line-height: 120px;
+    height: 120px;
+    width: 120px;
+    float: left;
+    font-size: 60px;
+    text-align: center;
+    line-height: 120px;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
 }
 
-/*highlight the square in which the mouse is hovering over*/
-.col:hover {
-        background-color: coral !important;
+.col[data-hidden='1'] {
+    font-size: 10px;
+    color: transparent !important;
+    background-color: gray;
 }
+
+.col[data-hidden='0'] {
+    font-size: 60px;
+}
+
+.col[data-selected='1'][data-team='0'] {
+    font-size: 30px;
+}
+
+.col[data-selected='1'][data-team='1'] {
+    font-size: 30px;
+}
+
+.col[data-team='0'] {
+    color: coral;
+    background-color: gray;
+}
+
+.col[data-team='1'] {
+    color: lightblue;
+    background-color: gray;
+}
+
+.col[data-empty='1'][data-hidden='0'] {
+    background-color: white;
+}
+
 
 .border-r {
 	border-right: 2px solid black;

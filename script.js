@@ -1,7 +1,23 @@
 //bomb, pike, bow, axe, sword, d, trap
 //7, 2, 3, 2, 2, 1, 1 (distribution)
 const pieceID = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35];
-const pieceStrength = [0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6];
+const pieceStrength = [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5];
+const one = 1
+const zero = 0
+//Board is
+//  0  1  2  3  4  5
+//  6  7  8  9 10 11
+// 12 13 14 15 16 17
+// 18 19 20 21 22 23
+// 24 25 26 27 28 29
+// 30 31 32 33 34 35
+// so for every position the adjacent positions are:
+const adjPositions = [[1, 6],         [0, 2, 7],         [1, 3, 8],         [2, 4, 9],         [3, 5, 10],         [4, 11], 
+                      [0, 7, 12],    [1, 6, 8, 13],    [2, 7, 9, 14],    [3, 8, 10, 15],     [4, 9, 11, 16],     [5, 10, 17],
+                      [6, 13, 18],  [7, 12, 14, 19],  [8, 13, 15, 20],   [9, 14, 16, 21],    [10, 15, 17, 22],   [11, 16, 23],
+                      [12, 19, 24], [13, 18, 20, 25], [14, 19, 21, 26],  [15, 20, 22, 27],   [16, 21, 23, 28],   [17, 22, 29],
+                      [18, 25, 30], [19, 24, 26, 31], [20, 25, 27, 32],  [21, 26, 28, 33],   [22, 27, 29, 34],   [23, 28, 35],
+                      [24, 31],     [25, 30, 32],     [26, 31, 33],      [27, 32, 34],       [28, 33, 35],         [29, 34]]
 
 const bombAndSeekGame = new BombAndSeekGame();
 bombAndSeekGame.start();
@@ -16,24 +32,67 @@ function CheckTeam(pieceID) {
 
 function BombAndSeekGame() {
 	const board = new Board();
-	const player1 = new Player1();
-	const player2 = new Player2();
+	const player1 = new Player(board);
+	const player2 = new Player(board);
 	let turn = 0;
 
 	this.start = function () {
 	    var initialBoard = shuffle(pieceID);
 	    for (i = 0; i < 36; i++) {
 	        //note: CURRENTLY USING TEXT OF THE DIV TO PLACE & IDENTIFY PIECES
-	        let piece = initialBoard[i];
+	        let pieceID = initialBoard[i];
 	        let square = board.positions[i];
-	        square.innerText = piece.toString();
+	        square.innerText = pieceStrength[pieceID].toString(); //Display the pieceID of each piece at the beginning
+	        square.dataset.pieceid = pieceID.toString() //Changing attribute of the "square" html element to be the shuffled pieces
+	        square.dataset.team = CheckTeam(pieceID).toString();
+            square.dataset.position = i.toString()
+            /*
             if (piece < 18) {
                 square.style.backgroundColor = 'lightblue';
             } else {
                 square.style.backgroundColor = 'lightyellow';
             }
-            
+            */
+
+        /*
+        const config = { childList: true };
+        const observer = new MutationObserver(() => takeTurn());
+        board.positions.forEach((el) => observer.observe(el, config))
+        */
 	    }
+	    takeTurn();
+	}
+
+	function takeTurn() {
+	    if (turn % 2 == 0) {
+	        console.log("Player 1's turn!");
+	        player1.takeTurn();
+	    } else {
+	        console.log("Player 2's turn!");
+	        player2.takeTurn();
+	    }
+	}
+	this.finishTurn = function () {
+	    turn++;
+	    console.log(`Turns passed: ${turn}`);
+	    takeTurn();
+	}
+
+	this.getTurn = function() {
+	    return turn;
+	}
+
+	this.setTeam = function(t1, t2) {
+	    player1.setTeam(t1)
+        player2.setTeam(t2)
+	}
+
+	this.getPlayer1Team = function() {
+	    return player1.getTeam();
+	}
+
+	this.getPlayer2Team = function() {
+	    return player2.getTeam();
 	}
 }
 
@@ -44,17 +103,161 @@ function Board() {
 }
 
 
-function Player1() {
+function Player(board) {
+    let selectedPiece = 0;
+    let targetPiece = 0;
+    let team = 0;
+
+    this.getTeam = function () {
+        return team;
+    }
+
+    this.setTeam = function(t) {
+        team = t
+    }
+
+    this.takeTurn = function () {
+        board.positions.forEach(el => el.addEventListener('click', selectPiece));
+    }
+
+    function selectPiece(event) {
+        //event.target.innerText = 'X';
+        selectedPiece = event.target;
+        selectedPiece.dataset.selected = one.toString();
+        //event.currentTarget.dataset.selected = zero.toString();
+
+        board.positions.forEach(el => el.removeEventListener('click', selectPiece));
+        if (checkValidSelection() == 1) {
+            //Once piece is selected, wait for another click to determine the action/result.
+            console.log('Valid piece selected!')
+            board.positions.forEach(el => el.addEventListener('click', handleTarget));
+        } else {
+            selectedPiece.dataset.selected = zero.toString(); //from here the piece doesn't need to be selected in html
+            console.log('Invalid selection, try again.');
+            reselectPiece();
+        }
+
+    }
+
+    function checkValidSelection() { //Can't select opponent's pieces or empty squares.
+        if (bombAndSeekGame.getTurn() == 0) { //if first turn
+            return 1;
+        } else {
+            if (parseInt(selectedPiece.dataset.empty) == 1) { //if empty
+                return 0;
+            } else {
+                if (parseInt(selectedPiece.dataset.hidden) == 1) { //if hidden
+                    return 1;
+                } else {
+                    if (parseInt(selectedPiece.dataset.team) == team) { //if own piece
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            }
+        }
+    }
+
+    function reselectPiece() { //This might be annoying in terms of interface as one would have to "click" the targetpiece again everytime a non-viable move is commanded.            
+        //console.log('Invalid move, try again.');
+        targetPiece = 0; //discard target piece
+        board.positions.forEach(el => el.addEventListener('click', selectPiece)); //basically goes back to this.takeTurn by selecting initial piece
+    }
+
+    function handleTarget(event) {
+        selectedPiece.dataset.selected = zero.toString(); //from here the piece doesn't need to be selected in html
+        targetPiece = event.target;
+
+        //These are the possible actions/results.
+        //!!!!!!!!!-----ESSENTIALLY THE RULESET OF THE GAME-----!!!!!!!!!
+        //1. If piece is hidden.
+        if (parseInt(targetPiece.dataset.hidden) == 1) {
+            // Reveal it.
+            if (targetPiece == selectedPiece) {
+                targetPiece.dataset.hidden = zero.toString();
+                console.log('Piece revealed!')
+                if (bombAndSeekGame.getTurn() == 0) { //if turn 1, set team
+                    let t1 = targetPiece.dataset.team;
+                    let temp = [1, 0]; //Opposite team for player2
+                    bombAndSeekGame.setTeam(t1, temp[t1]);
+                }
+                board.positions.forEach(el => el.removeEventListener('click', handleTarget));
+                bombAndSeekGame.finishTurn(); //remember u need this to finish turn!!!
+            } else { console.log('The target is hidden, invalid move! Please reselect.'); reselectPiece(); }// Go back to selection.
+
+        } else {
+            if (targetPiece == selectedPiece) {
+                console.log('The target is your selection. Please reselect.');
+                reselectPiece();
+            } else {
+
+                //2. Check if target square is adjacent.
+                let i = parseInt(selectedPiece.dataset.position);
+                console.log(`selected piece position ${i}`);
+                let j = parseInt(targetPiece.dataset.position);
+                console.log(`targeted piece position ${j}`);
+                if (adjPositions[i].includes(j)) {
+                    //3. Check if target square is actually move-able to.
+                    console.log('Adjacent square targeted!')
+                    if (parseInt(targetPiece.dataset.empty) == 1) { //If empty, move.
+                        movePieces(selectedPiece, targetPiece, 0);
+                    } else {
+                            if (team != targetPiece.dataset.team) { //If not targeted team, compare strength
+                                let selectedPieceStrength = pieceStrength[parseInt(selectedPiece.dataset.pieceid)];
+                                let targetPieceStrength = pieceStrength[parseInt(targetPiece.dataset.pieceid)];
+
+                                //Compare strength
+                                if (selectedPieceStrength == 0) { //If selected Bomb
+                                    if (targetPieceStrength == 5) {
+                                        movePieces(selectedPiece, targetPiece, 1);
+                                    } else { console.log('Selected piece too weak! Please reselect.'); reselectPiece(); }
+                                } else { //If bomb not selected
+                                    if (selectedPieceStrength > targetPieceStrength) { 
+                                        movePieces(selectedPiece, targetPiece, 0);
+                                    } else { console.log('Selected piece too weak! Please reselect.'); reselectPiece(); }
+                                }
+
+
+                            } else { console.log('Targeted piece is your own! Please reselect.'); reselectPiece(); } //If target is team, re-select.
+                        
+                    }
+                } else { console.log('Targeted piece too far away! Please reselect.'); reselectPiece(); } //If target square is not adjacent, go back to selection.
+                
+
+            }
+
+        }
+    }
+
+    function movePieces(s, t, scenario) { //scenario = 1 is when bomb moves to drag
+
+        if (scenario == 1) {
+            if (bombAndSeekGame.getTurn() % 2 == 0) {
+                console.log('Player 1 WINS!!!')
+            } else {
+                console.log('Player 2 WINS!!!')
+            }
+          
+        } else {
+            t.dataset.empty = zero.toString();
+            t.dataset.pieceid = s.dataset.pieceid;
+            t.dataset.team = s.dataset.team;
+            t.dataset.selected = zero.toString();
+            t.innerText = s.innerText;
+            
+        }
+        s.dataset.empty = one.toString(); //every movement will leave behind an empty square
+        notTeam = 2;
+        s.dataset.team = notTeam.toString();
+        s.innerText = ' ';
+        board.positions.forEach(el => el.removeEventListener('click', handleTarget));
+        bombAndSeekGame.finishTurn(); //remember u need this to finish turn!!!
+    }
+
 }
 
 
-function Player2() {
-}
-
-
-function Piece() {
-
-}
 
 
 //Stuff I copied from ppl
