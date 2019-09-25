@@ -12,12 +12,14 @@ const zero = 0
 // 24 25 26 27 28 29
 // 30 31 32 33 34 35
 // so for every position the adjacent positions are:
-const adjPositions = [[1, 6],         [0, 2, 7],         [1, 3, 8],         [2, 4, 9],         [3, 5, 10],         [4, 11], 
-                      [0, 7, 12],    [1, 6, 8, 13],    [2, 7, 9, 14],    [3, 8, 10, 15],     [4, 9, 11, 16],     [5, 10, 17],
-                      [6, 13, 18],  [7, 12, 14, 19],  [8, 13, 15, 20],   [9, 14, 16, 21],    [10, 15, 17, 22],   [11, 16, 23],
-                      [12, 19, 24], [13, 18, 20, 25], [14, 19, 21, 26],  [15, 20, 22, 27],   [16, 21, 23, 28],   [17, 22, 29],
-                      [18, 25, 30], [19, 24, 26, 31], [20, 25, 27, 32],  [21, 26, 28, 33],   [22, 27, 29, 34],   [23, 28, 35],
-                      [24, 31],     [25, 30, 32],     [26, 31, 33],      [27, 32, 34],       [28, 33, 35],         [29, 34]]
+const adjPositions = [
+                        [1, 6],         [0, 2, 7],          [1, 3, 8],          [2, 4, 9],          [3, 5, 10],         [4, 11],
+                        [0, 7, 12],     [1, 6, 8, 13],      [2, 7, 9, 14],      [3, 8, 10, 15],     [4, 9, 11, 16],     [5, 10, 17],
+                        [6, 13, 18],    [7, 12, 14, 19],    [8, 13, 15, 20],    [9, 14, 16, 21],    [10, 15, 17, 22],   [11, 16, 23],
+                        [12, 19, 24],   [13, 18, 20, 25],   [14, 19, 21, 26],   [15, 20, 22, 27],   [16, 21, 23, 28],   [17, 22, 29],
+                        [18, 25, 30],   [19, 24, 26, 31],   [20, 25, 27, 32],   [21, 26, 28, 33],   [22, 27, 29, 34],   [23, 28, 35],
+                        [24, 31],       [25, 30, 32],       [26, 31, 33],       [27, 32, 34],       [28, 33, 35],       [29, 34]
+                    ]
 
 const bombAndSeekGame = new BombAndSeekGame();
 bombAndSeekGame.start();
@@ -31,75 +33,62 @@ function CheckTeam(pieceID) {
 }
 
 function BombAndSeekGame() {
-	const board = new Board();
-	const player1 = new Player(board);
-	const player2 = new Player(board);
-	let turn = 0;
+    const board = new Board();
+    const player1 = new Player(board);
+    const player2 = new Player(board);
+    let turn = 0;
 
-	this.start = function () {
-	    var initialBoard = shuffle(pieceID);
-	    for (i = 0; i < 36; i++) {
-	        //note: CURRENTLY USING TEXT OF THE DIV TO PLACE & IDENTIFY PIECES
-	        let pieceID = initialBoard[i];
-	        let square = board.positions[i];
-	        square.innerText = pieceStrength[pieceID].toString(); //Display the pieceID of each piece at the beginning
-	        square.dataset.pieceid = pieceID.toString() //Changing attribute of the "square" html element to be the shuffled pieces
-	        square.dataset.team = CheckTeam(pieceID).toString();
+    this.start = function () {
+        var initialBoard = shuffle(pieceID);
+        for (i = 0; i < 36; i++) {
+            //note: CURRENTLY USING TEXT OF THE DIV TO PLACE & IDENTIFY PIECES
+            let pieceID = initialBoard[i];
+            let square = board.positions[i];
+            square.innerText = pieceStrength[pieceID].toString(); //Display the pieceID of each piece at the beginning
+            square.dataset.pieceid = pieceID.toString() //Changing attribute of the "square" html element to be the shuffled pieces
+            square.dataset.team = CheckTeam(pieceID).toString();
             square.dataset.position = i.toString()
-            /*
-            if (piece < 18) {
-                square.style.backgroundColor = 'lightblue';
-            } else {
-                square.style.backgroundColor = 'lightyellow';
-            }
-            */
+        }
+        takeTurn();
+    }
 
-        /*
-        const config = { childList: true };
-        const observer = new MutationObserver(() => takeTurn());
-        board.positions.forEach((el) => observer.observe(el, config))
-        */
-	    }
-	    takeTurn();
-	}
+    function takeTurn() {
+        if (turn % 2 == 0) {
+            console.log("Player 1's turn!");
+            player1.takeTurn();
+        } else {
+            console.log("Player 2's turn!");
+            player2.takeTurn();
+        }
+    }
+    this.finishTurn = function () {
+        turn++;
+        console.log(`Turns passed: ${turn}`);
+        takeTurn();
+    }
 
-	function takeTurn() {
-	    if (turn % 2 == 0) {
-	        console.log("Player 1's turn!");
-	        player1.takeTurn();
-	    } else {
-	        console.log("Player 2's turn!");
-	        player2.takeTurn();
-	    }
-	}
-	this.finishTurn = function () {
-	    turn++;
-	    console.log(`Turns passed: ${turn}`);
-	    takeTurn();
-	}
+    this.getTurn = function () {
+        return turn;
+    }
 
-	this.getTurn = function() {
-	    return turn;
-	}
-
-	this.setTeam = function(t1, t2) {
-	    player1.setTeam(t1)
+    this.setTeam = function (t1, t2) {
+        player1.setTeam(t1)
         player2.setTeam(t2)
-	}
+    }
 
-	this.getPlayer1Team = function() {
-	    return player1.getTeam();
-	}
+    this.getPlayer1Team = function () {
+        return player1.getTeam();
+    }
 
-	this.getPlayer2Team = function() {
-	    return player2.getTeam();
-	}
+    this.getPlayer2Team = function () {
+        return player2.getTeam();
+    }
 }
 
 
 function Board() {
-	this.positions = Array.from(document.querySelectorAll('.col'));
-	//console.log(this.positions);
+    this.positions = Array.from(document.querySelectorAll('.col'));
+    //console.log(this.positions);
 }
 
 
@@ -112,7 +101,7 @@ function Player(board) {
         return team;
     }
 
-    this.setTeam = function(t) {
+    this.setTeam = function (t) {
         team = t
     }
 
@@ -203,27 +192,27 @@ function Player(board) {
                     if (parseInt(targetPiece.dataset.empty) == 1) { //If empty, move.
                         movePieces(selectedPiece, targetPiece, 0);
                     } else {
-                            if (team != targetPiece.dataset.team) { //If not targeted team, compare strength
-                                let selectedPieceStrength = pieceStrength[parseInt(selectedPiece.dataset.pieceid)];
-                                let targetPieceStrength = pieceStrength[parseInt(targetPiece.dataset.pieceid)];
+                        if (team != targetPiece.dataset.team) { //If not targeted team, compare strength
+                            let selectedPieceStrength = pieceStrength[parseInt(selectedPiece.dataset.pieceid)];
+                            let targetPieceStrength = pieceStrength[parseInt(targetPiece.dataset.pieceid)];
 
-                                //Compare strength
-                                if (selectedPieceStrength == 0) { //If selected Bomb
-                                    if (targetPieceStrength == 5) {
-                                        movePieces(selectedPiece, targetPiece, 1);
-                                    } else { console.log('Selected piece too weak! Please reselect.'); reselectPiece(); }
-                                } else { //If bomb not selected
-                                    if (selectedPieceStrength > targetPieceStrength) { 
-                                        movePieces(selectedPiece, targetPiece, 0);
-                                    } else { console.log('Selected piece too weak! Please reselect.'); reselectPiece(); }
-                                }
+                            //Compare strength
+                            if (selectedPieceStrength == 0) { //If selected Bomb
+                                if (targetPieceStrength == 5) {
+                                    movePieces(selectedPiece, targetPiece, 1);
+                                } else { console.log('Selected piece too weak! Please reselect.'); reselectPiece(); }
+                            } else { //If bomb not selected
+                                if (selectedPieceStrength > targetPieceStrength) {
+                                    movePieces(selectedPiece, targetPiece, 0);
+                                } else { console.log('Selected piece too weak! Please reselect.'); reselectPiece(); }
+                            }
 
 
-                            } else { console.log('Targeted piece is your own! Please reselect.'); reselectPiece(); } //If target is team, re-select.
-                        
+                        } else { console.log('Targeted piece is your own! Please reselect.'); reselectPiece(); } //If target is team, re-select.
+
                     }
                 } else { console.log('Targeted piece too far away! Please reselect.'); reselectPiece(); } //If target square is not adjacent, go back to selection.
-                
+
 
             }
 
@@ -238,14 +227,14 @@ function Player(board) {
             } else {
                 console.log('Player 2 WINS!!!')
             }
-          
+
         } else {
             t.dataset.empty = zero.toString();
             t.dataset.pieceid = s.dataset.pieceid;
             t.dataset.team = s.dataset.team;
             t.dataset.selected = zero.toString();
             t.innerText = s.innerText;
-            
+
         }
         s.dataset.empty = one.toString(); //every movement will leave behind an empty square
         notTeam = 2;
