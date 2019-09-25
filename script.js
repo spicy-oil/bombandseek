@@ -235,7 +235,8 @@ function Player(board) {
                     if (parseInt(targetPiece.dataset.empty) == 1) { //If empty, move.
                         movePieces(selectedPiece, targetPiece, 0);
                     } else {
-                        if (this.team != targetPiece.dataset.team) { //If not targeted team, compare strength
+                        temp = [-1, bombAndSeekGame.player1Team, bombAndSeekGame.player2Team]
+                        if (temp[bombAndSeekGame.whoseTurn()] != targetPiece.dataset.team) { //If not targeted team, compare strength
                             let selectedPieceStrength = pieceStrength[parseInt(selectedPiece.dataset.pieceid)];
                             let targetPieceStrength = pieceStrength[parseInt(targetPiece.dataset.pieceid)];
 
