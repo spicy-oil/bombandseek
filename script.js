@@ -33,9 +33,9 @@ function CheckTeam(pieceID) {
 }
 
 function BombAndSeekGame() {
-    const board = new Board();
-    const player1 = new Player(board);
-    const player2 = new Player(board);
+    this.board = new Board();
+    const player1 = new Player(this.board);
+    const player2 = new Player(this.board);
     let turn = 0;
 
     this.start = function () {
@@ -43,12 +43,13 @@ function BombAndSeekGame() {
         for (i = 0; i < 36; i++) {
             //note: CURRENTLY USING TEXT OF THE DIV TO PLACE & IDENTIFY PIECES
             let pieceID = initialBoard[i];
-            let square = board.positions[i];
+            let square = this.board.positions[i];
             square.innerText = pieceStrength[pieceID].toString(); //Display the pieceID of each piece at the beginning
             square.dataset.pieceid = pieceID.toString() //Changing attribute of the "square" html element to be the shuffled pieces
             square.dataset.team = CheckTeam(pieceID).toString();
             square.dataset.position = i.toString()
         }
+        this.board.turnCounter.innerText = 'Turn number: 1'
         takeTurn();
     }
 
@@ -63,6 +64,7 @@ function BombAndSeekGame() {
     }
     this.finishTurn = function () {
         turn++;
+        this.board.turnCounter.innerText = 'Turn number: ' + turn.toString();
         console.log(`Turns passed: ${turn}`);
         takeTurn();
     }
@@ -88,6 +90,7 @@ function BombAndSeekGame() {
 
 function Board() {
     this.positions = Array.from(document.querySelectorAll('.col'));
+    this.turnCounter = document.querySelectorAll('.turn_counter')[0];
     //console.log(this.positions);
 }
 

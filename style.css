@@ -11,6 +11,12 @@ h1 {
 	font-family: Candara;
 }
 
+.turn_counter {
+	text-align: left;
+	font-size: 20px;
+	font-family: Helvetica;
+}
+
 .row {
 	height: 120px;
 }
