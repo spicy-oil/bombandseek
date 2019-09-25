@@ -204,6 +204,11 @@ function Player(board) {
                                 if (targetPieceStrength == 5) {
                                     movePieces(selectedPiece, targetPiece, 1);
                                 } else { console.log('Selected piece too weak! Please reselect.'); reselectPiece(); }
+                            } else if (selectedPieceStrength == 5) {
+                                if (targetPieceStrength == 0) {
+                                    console.log('Dragon targeting bomb is invalid');
+                                    reselectPiece();
+                                }
                             } else { //If bomb not selected
                                 if (selectedPieceStrength > targetPieceStrength) {
                                     movePieces(selectedPiece, targetPiece, 0);
