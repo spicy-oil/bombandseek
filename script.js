@@ -4,6 +4,7 @@ const pieceID = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 1
 const pieceStrength = [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5];
 const one = 1
 const zero = 0
+const teamColors = ['coral', 'lightblue']
 //Board is
 //  0  1  2  3  4  5
 //  6  7  8  9 10 11
@@ -50,26 +51,45 @@ function BombAndSeekGame() {
             square.innerText = pieceStrength[pieceID].toString(); //Display the pieceID of each piece at the beginning
             square.dataset.pieceid = pieceID.toString() //Changing attribute of the "square" html element to be the shuffled pieces
             square.dataset.team = CheckTeam(pieceID).toString();
-            square.dataset.position = i.toString()
+            square.dataset.position = i.toString();
         }
-        this.board.turnCounter.innerText = 'Turn number: 1'
-        takeTurn();
+        this.board.turnCounter.innerText = 'Turn number: 1';
+        this.board.playerTurn.innerText = 'Player 1';
+        this.board.playerHP.innerText = this.HPString();
+
+        this.takeTurn();
     }
 
-    function takeTurn() {
-        if (turn % 2 == 0) {
+    this.HPString = function () {
+        return 'Player 1 HP: ' + this.dragon1HP.toString() + ' \nPlayer 2 HP: ' + this.dragon2HP.toString();
+    }
+
+    this.takeTurn = function() {
+        if (turn > 0) {
+            if (turn % 2 == 0) {
+                console.log("Player 1's turn!");
+                this.board.playerTurn.innerText = "Player 1's turn";
+                this.board.playerTurn.style.color = teamColors[player1.team];
+                player1.takeTurn();
+            } else {
+                console.log("Player 2's turn!");
+                this.board.playerTurn.innerText = "Player 2's turn";
+                this.board.playerTurn.style.color = teamColors[player2.team]
+                player2.takeTurn();
+            }
+        }
+        else {
             console.log("Player 1's turn!");
+            this.board.playerTurn.innerText = "Player 1's turn";
             player1.takeTurn();
-        } else {
-            console.log("Player 2's turn!");
-            player2.takeTurn();
         }
     }
     this.finishTurn = function () {
         turn++;
         this.board.turnCounter.innerText = 'Turn number: ' + turn.toString();
+
         console.log(`Turns passed: ${turn}`);
-        takeTurn();
+        this.takeTurn();
     }
 
     this.getTurn = function () {
@@ -77,7 +97,9 @@ function BombAndSeekGame() {
     }
 
     this.setTeam = function (t1, t2) {
-        player1.setTeam(t1)
+        this.player1Team = t1;
+        this.player2Team = t2;
+        player1.setTeam(t1);
         player2.setTeam(t2)
     }
 
@@ -88,12 +110,25 @@ function BombAndSeekGame() {
     this.getPlayer2Team = function () {
         return player2.getTeam();
     }
+
+    this.whoseTurn = function() {
+        if (bombAndSeekGame.getTurn() % 2 == 0) { //Player 1's turn
+            return 1
+        } else {
+            return 2
+        } //[-1, player1's team, player2's team]
+        
+    }
 }
 
 
 function Board() {
     this.positions = Array.from(document.querySelectorAll('.col'));
     this.turnCounter = document.querySelectorAll('.turn_counter')[0];
+    this.playerTurn = document.querySelectorAll('.player_turn')[0];
+    this.playerHP = document.querySelectorAll('.player_HP')[0];
+    this.bombsRemaining = document.querySelectorAll('.bombs_remaining')[0];
+
     //console.log(this.positions);
 }
 
@@ -101,14 +136,15 @@ function Board() {
 function Player(board) {
     let selectedPiece = 0;
     let targetPiece = 0;
-    let team = 0;
+    this.team = 0;
 
     this.getTeam = function () {
-        return team;
+        return this.team;
     }
 
     this.setTeam = function (t) {
-        team = t
+        this.team = t
+
     }
 
     this.takeTurn = function () {
@@ -144,7 +180,8 @@ function Player(board) {
                 if (parseInt(selectedPiece.dataset.hidden) == 1) { //if hidden
                     return 1;
                 } else {
-                    if (parseInt(selectedPiece.dataset.team) == team) { //if own piece
+                    temp = [-1, bombAndSeekGame.player1Team, bombAndSeekGame.player2Team]
+                    if (parseInt(selectedPiece.dataset.team) == temp[bombAndSeekGame.whoseTurn()]) { //if own piece
                         return 1;
                     } else {
                         return 0;
@@ -198,7 +235,7 @@ function Player(board) {
                     if (parseInt(targetPiece.dataset.empty) == 1) { //If empty, move.
                         movePieces(selectedPiece, targetPiece, 0);
                     } else {
-                        if (team != targetPiece.dataset.team) { //If not targeted team, compare strength
+                        if (this.team != targetPiece.dataset.team) { //If not targeted team, compare strength
                             let selectedPieceStrength = pieceStrength[parseInt(selectedPiece.dataset.pieceid)];
                             let targetPieceStrength = pieceStrength[parseInt(targetPiece.dataset.pieceid)];
 
@@ -248,6 +285,7 @@ function Player(board) {
                 }
                 
             }
+        bombAndSeekGame.board.playerHP.innerText = bombAndSeekGame.HPString();
         } else {
             t.dataset.empty = zero.toString();
             t.dataset.pieceid = s.dataset.pieceid;
@@ -257,7 +295,7 @@ function Player(board) {
 
         }
         s.dataset.empty = one.toString(); //every movement will leave behind an empty square
-        notTeam = 2;
+        notTeam = 2; // property of empty
         s.dataset.team = notTeam.toString();
         s.innerText = ' ';
         board.positions.forEach(el => el.removeEventListener('click', handleTarget));

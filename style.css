@@ -17,6 +17,23 @@ h1 {
 	font-family: Helvetica;
 }
 
+.player_turn {
+	text-align: left;
+	font-size: 20px;
+	font-family: Helvetica;
+}
+
+.player_HP {
+	text-align: left;
+	font-size: 20px;
+    font-family: Helvetica;
+
+}.bombs_remaining {
+	text-align: left;
+	font-size: 20px;
+	font-family: Helvetica;
+}
+
 .row {
 	height: 120px;
 }
