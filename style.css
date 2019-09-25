@@ -1,8 +1,17 @@
+.master_container{
+    margin: auto;
+}
+
 .container {
 	width: 734px; /*note the borders of each square adds to this width!!!! so right now have 7 borders in each row each 2px thick, with 120px by 120px box this is (6 * 120 + 7 * 2)   */
-	height: 900px;
+	height: 1000px;
 	margin: auto;
-	margin-top: 100px;
+    margin-top: 100px;
+    z-index: 2;
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
 }
 
 h1 {
@@ -27,11 +36,35 @@ h1 {
 	text-align: left;
 	font-size: 20px;
     font-family: Helvetica;
+}
 
-}.bombs_remaining {
+.bombs_remaining {
 	text-align: left;
 	font-size: 20px;
 	font-family: Helvetica;
+}
+
+.game_over {
+    text-align: center;
+    vertical-align: middle;
+	width: 734px;
+    height: 1106px;
+	font-size: 200px;
+	font-family: Helvetica;
+    margin-top: 100px;
+    background-color: white;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";       /* IE 8 */
+    filter: alpha(opacity=50);  /* IE 5-7 */
+    -moz-opacity: 0.5;          /* Netscape */
+    -khtml-opacity: 0.5;        /* Safari 1.x */
+    opacity: 0.5;               /* Good browsers */
+    z-index: 3;
+    margin: auto;
+    display: none;
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
 }
 
 .row {
@@ -51,6 +84,7 @@ h1 {
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Opera and Firefox */
+    z-index: 10;
 }
 
 .col[data-hidden='1'] {

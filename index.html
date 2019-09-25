@@ -6,62 +6,68 @@
 
 
 <body bgcolor="white">
-	<div class="container">
-		<h1>Bomb and Seek</h1>
-        <div class = "turn_counter" ></div>
-        <div class = "player_turn"></div>
-        <div class = "player_HP"></div>
-        <div class = "bombs_remaining"></div>
-		
-		<! squares i.e. div of row containing divs of coulumns>
-        <! note attributes of elements are not case sensitive to JavaScript, e.g. pieceID doesn't work if written in JS, only pieceid works...'>
-		<div class="row border-b border-t border-l border-r">
-			<div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div> <! this square does not have a -r border as it's the right most square>
-		</div>
-        <div class="row border-b border-l border-r">
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-        </div>
-        <div class="row border-b border-l border-r">
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-        </div>
-        <div class="row border-b border-l border-r">
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-        </div>
-        <div class="row border-b border-l border-r">
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-        </div>
-        <div class="row border-b border-l border-r">
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
-            <div class="col" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+    <div class="master_container">
+        <div class="game_over">Game over</div>
+
+        <div class="container">
+            <h1>Bomb and Seek</h1>
+            <div class="info_box">
+                    <div class = "turn_counter" ></div>
+                    <div class = "player_turn"></div>
+                    <div class = "player_HP"></div>
+                    <div class = "bombs_remaining"></div></div>
+            
+            
+            <! squares i.e. div of row containing divs of coulumns>
+            <! note attributes of elements are not case sensitive to JavaScript, e.g. pieceID doesn't work if written in JS, only pieceid works...'>
+            <div class="row border-b border-t border-l border-r">
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div> <! this square does not have a -r border as it's the right most square>
+            </div>
+            <div class="row border-b border-l border-r">
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+            </div>
+            <div class="row border-b border-l border-r">
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+            </div>
+            <div class="row border-b border-l border-r">
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+            </div>
+            <div class="row border-b border-l border-r">
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+            </div>
+            <div class="row border-b border-l border-r">
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col border-r" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+                <div class="col" data-hidden="1" data-empty="0" data-pieceID="-1" data-selected="0" data-team="0" data-position="-1"></div>
+            </div>
         </div>
 	</div>
   

@@ -120,6 +120,11 @@ function BombAndSeekGame() {
         
     }
 
+    this.endGame = function(winner) {
+        this.board.gameOver.style.display = "block"
+        this.board.gameOver.innerText = "\n\nPlayer " + winner.toString() + " wins!"
+    }
+
     this.debug = function () { // Double click on each square for debugging
         this.board.positions.forEach(el => doubleClick(el));
         console.log('Debug mode')
@@ -133,6 +138,7 @@ function Board() {
     this.playerTurn = document.querySelectorAll('.player_turn')[0];
     this.playerHP = document.querySelectorAll('.player_HP')[0];
     this.bombsRemaining = document.querySelectorAll('.bombs_remaining')[0];
+    this.gameOver = document.querySelectorAll('.game_over')[0];
 
     //console.log(this.positions);
 }
@@ -280,14 +286,16 @@ function Player(board) {
                 console.log('Player 1 damages Player 2');
                 bombAndSeekGame.dragon2HP -= 1;
                 if (bombAndSeekGame.dragon2HP == 0) {
-                    console.log('Player 1 WINS!!!')
+                    console.log('Player 1 WINS!!!');
+                    bombAndSeekGame.endGame(1)
                 }
 
             } else { // Player 2's turn
             console.log('Player 2 damages Player 1');
                 bombAndSeekGame.dragon1HP -= 1;
                 if (bombAndSeekGame.dragon1HP == 0) {
-                    console.log('Player 2 WINS!!!')
+                    console.log('Player 2 WINS!!!');
+                    bombAndSeekGame.endGame(2)
                 }
                 
             }
