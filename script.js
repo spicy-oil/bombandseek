@@ -41,6 +41,7 @@ function BombAndSeekGame() {
     const player1 = new Player(this.board);
     const player2 = new Player(this.board);
     let turn = 0;
+    this.safeZones = [8, 16, 19, 27]
 
     this.start = function () {
         var initialBoard = shuffle(pieceID);
@@ -59,6 +60,16 @@ function BombAndSeekGame() {
 
         this.takeTurn();
     }
+
+    this.removeSafeZone = function (targetPiece) {
+        j = parseInt(targetPiece)
+        for (var i = 0; i < this.safeZones.length; i++) { 
+            if (this.safeZones[i] === j) {
+                this.safeZones.splice(i, 1); 
+            }
+        }
+    }
+
 
     this.HPString = function () {
         return 'Player 1 HP: ' + this.dragon1HP.toString() + ' \nPlayer 2 HP: ' + this.dragon2HP.toString();
@@ -265,18 +276,30 @@ function Player(board) {
                             let selectedPieceStrength = pieceStrength[parseInt(selectedPiece.dataset.pieceid)];
                             let targetPieceStrength = pieceStrength[parseInt(targetPiece.dataset.pieceid)];
 
+                            // Check safezone
+                            if (bombAndSeekGame.safeZones.includes(j)) {
+                                if (!(selectedPieceStrength == 5)) {
+                                    console.log('Non dragon cannot attack into safezone');
+                                    reselectPiece();
+                                } else if (targetPieceStrength != 0 && targetPieceStrength != 5) {
+                                    movePieces(selectedPiece, targetPiece, 0);
+                                    console.log('Piece successfully captured and safezone destroyed.');
+                                    bombAndSeekGame.removeSafeZone(targetPiece);
+                                }
                             // Compare strength
-                            if (selectedPieceStrength == 0 && targetPieceStrength == 5) { //If selected Bomb
-                                movePieces(selectedPiece, targetPiece, 1);
-                            } else if (selectedPieceStrength == 5 && targetPieceStrength == 0) {
-                                console.log('Dragon targeting bomb is invalid');
-                                reselectPiece();
-                            } else if (selectedPieceStrength > targetPieceStrength) {
-                                console.log('Piece successfully captured.');
-                                movePieces(selectedPiece, targetPiece, 0);
                             } else {
-                                console.log('Selected piece too weak! Please reselect.');
-                                reselectPiece();
+                                if (selectedPieceStrength == 0 && targetPieceStrength == 5) { //If selected Bomb
+                                    movePieces(selectedPiece, targetPiece, 1);
+                                } else if (selectedPieceStrength == 5 && targetPieceStrength == 0) {
+                                    console.log('Dragon targeting bomb is invalid');
+                                    reselectPiece();
+                                } else if (selectedPieceStrength > targetPieceStrength) {
+                                    console.log('Piece successfully captured.');
+                                    movePieces(selectedPiece, targetPiece, 0);
+                                } else {
+                                    console.log('Selected piece too weak! Please reselect.');
+                                    reselectPiece();
+                                }
                             }
 
                         } else { console.log('Targeted piece is your own! Please reselect.'); reselectPiece(); } //If target is team, re-select.
