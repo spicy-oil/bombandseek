@@ -64,9 +64,9 @@ function BombAndSeekGame() {
         return 'Player 1 HP: ' + this.dragon1HP.toString() + ' \nPlayer 2 HP: ' + this.dragon2HP.toString();
     }
 
-    this.takeTurn = function() {
-        if (turn > 0) {
-            if (turn % 2 == 0) {
+    this.takeTurn = function () {
+        if (!this.isFirstTurn()) {
+            if (this.isPlayer1sTurn()) {
                 console.log("Player 1's turn!");
                 this.board.playerTurn.innerText = "Player 1's turn";
                 this.board.playerTurn.style.color = teamColors[player1.team];
@@ -96,6 +96,14 @@ function BombAndSeekGame() {
         return turn;
     }
 
+    this.isFirstTurn = function () {
+        if (bombAndSeekGame.getTurn() == 0) {
+            return true
+        } else {
+            return false
+        }
+    }
+
     this.setTeam = function (t1, t2) {
         this.player1Team = t1;
         this.player2Team = t2;
@@ -111,16 +119,15 @@ function BombAndSeekGame() {
         return player2.getTeam();
     }
 
-    this.whoseTurn = function() {
+    this.isPlayer1sTurn = function () {
         if (bombAndSeekGame.getTurn() % 2 == 0) { //Player 1's turn
-            return 1
+            return true
         } else {
-            return 2
-        } //[-1, player1's team, player2's team]
-        
+            return false
+        }
     }
 
-    this.endGame = function(winner) {
+    this.endGame = function (winner) {
         this.board.gameOver.style.display = "block"
         this.board.gameOver.innerText = "\n\nPlayer " + winner.toString() + " wins!"
     }
@@ -181,8 +188,16 @@ function Player(board) {
 
     }
 
+    function isPlayer1sPiece(piece) {
+        if (parseInt(piece.dataset.team) == bombAndSeekGame.player1Team) {
+            return true
+        } else {
+            return false
+        }
+    }
+
     function isValidSelection() { //Can't select opponent's pieces or empty squares.
-        if (bombAndSeekGame.getTurn() == 0) { //if first turn
+        if (bombAndSeekGame.isFirstTurn()) { //if first turn
             return true;
         } else {
             if (parseInt(selectedPiece.dataset.empty) == 1) { //if empty
@@ -191,8 +206,7 @@ function Player(board) {
                 if (parseInt(selectedPiece.dataset.hidden) == 1) { //if hidden
                     return true;
                 } else {
-                    temp = [-1, bombAndSeekGame.player1Team, bombAndSeekGame.player2Team]
-                    if (parseInt(selectedPiece.dataset.team) == temp[bombAndSeekGame.whoseTurn()]) { //if own piece
+                    if (bombAndSeekGame.isPlayer1sTurn() == isPlayer1sPiece(selectedPiece)) {
                         return true;
                     } else {
                         return false;
@@ -201,6 +215,7 @@ function Player(board) {
             }
         }
     }
+
 
     function reselectPiece() { //This might be annoying in terms of interface as one would have to "click" the targetpiece again everytime a non-viable move is commanded.            
         //console.log('Invalid move, try again.');
@@ -246,8 +261,7 @@ function Player(board) {
                     if (parseInt(targetPiece.dataset.empty) == 1) { //If empty, move.
                         movePieces(selectedPiece, targetPiece, 0);
                     } else {
-                        temp = [-1, bombAndSeekGame.player1Team, bombAndSeekGame.player2Team]
-                        if (temp[bombAndSeekGame.whoseTurn()] != targetPiece.dataset.team) { //If not targeted team, compare strength
+                        if (!(bombAndSeekGame.isPlayer1sTurn() == isPlayer1sPiece(targetPiece))) { //If not targeted team, compare strength
                             let selectedPieceStrength = pieceStrength[parseInt(selectedPiece.dataset.pieceid)];
                             let targetPieceStrength = pieceStrength[parseInt(targetPiece.dataset.pieceid)];
 
@@ -260,7 +274,7 @@ function Player(board) {
                             } else if (selectedPieceStrength > targetPieceStrength) {
                                 console.log('Piece successfully captured.');
                                 movePieces(selectedPiece, targetPiece, 0);
-                            } else { 
+                            } else {
                                 console.log('Selected piece too weak! Please reselect.');
                                 reselectPiece();
                             }
@@ -279,7 +293,7 @@ function Player(board) {
     function movePieces(s, t, scenario) { //scenario = 1 is when bomb moves to drag
 
         if (scenario == 1) {
-            if (bombAndSeekGame.getTurn() % 2 == 0) { //Player 1's turn
+            if (bombAndSeekGame.isPlayer1sTurn()) { //Player 1's turn
                 console.log('Player 1 damages Player 2');
                 bombAndSeekGame.dragon2HP -= 1;
                 if (bombAndSeekGame.dragon2HP == 0) {
@@ -288,15 +302,15 @@ function Player(board) {
                 }
 
             } else { // Player 2's turn
-            console.log('Player 2 damages Player 1');
+                console.log('Player 2 damages Player 1');
                 bombAndSeekGame.dragon1HP -= 1;
                 if (bombAndSeekGame.dragon1HP == 0) {
                     console.log('Player 2 WINS!!!');
                     bombAndSeekGame.endGame(2)
                 }
-                
+
             }
-        bombAndSeekGame.board.playerHP.innerText = bombAndSeekGame.HPString();
+            bombAndSeekGame.board.playerHP.innerText = bombAndSeekGame.HPString();
         } else {
             t.dataset.empty = zero.toString();
             t.dataset.pieceid = s.dataset.pieceid;
