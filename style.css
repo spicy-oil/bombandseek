@@ -120,6 +120,15 @@ h1 {
 }
 
 
+.col[data-safe='0'] {
+    background-color: gray;
+}
+
+.col[data-safe='1'] {
+    background-color: silver !important;
+}
+
+
 .border-r {
 	border-right: 2px solid black;
 }

@@ -68,6 +68,7 @@ function BombAndSeekGame() {
                 this.safeZones.splice(i, 1); 
             }
         }
+        targetPiece.dataset.safe = '0'
     }
 
 
@@ -268,13 +269,17 @@ function Player(board) {
                 console.log(`targeted piece position ${j}`);
                 if (adjPositions[i].includes(j)) {
                     //3. Check if target square is actually move-able to.
+                    let selectedPieceStrength = pieceStrength[parseInt(selectedPiece.dataset.pieceid)];
+                    let targetPieceStrength = pieceStrength[parseInt(targetPiece.dataset.pieceid)];
                     console.log('Adjacent square targeted!')
                     if (parseInt(targetPiece.dataset.empty) == 1) { //If empty, move.
                         movePieces(selectedPiece, targetPiece, 0);
+                        if (bombAndSeekGame.safeZones.includes(j) && selectedPieceStrength == 5) {
+                            bombAndSeekGame.removeSafeZone(targetPiece)
+                        }
                     } else {
                         if (!(bombAndSeekGame.isPlayer1sTurn() == isPlayer1sPiece(targetPiece))) { //If not targeted team, compare strength
-                            let selectedPieceStrength = pieceStrength[parseInt(selectedPiece.dataset.pieceid)];
-                            let targetPieceStrength = pieceStrength[parseInt(targetPiece.dataset.pieceid)];
+
 
                             // Check safezone
                             if (bombAndSeekGame.safeZones.includes(j)) {
